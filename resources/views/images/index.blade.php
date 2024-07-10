@@ -4,6 +4,7 @@
     <title>Laravel Image Upload</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
@@ -52,6 +53,12 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </form>
+                    <div id="dropzone">
+                        <label for="image">Choose Image</label>
+                        <form action="#" class="dropzone" id="my-dropzone">
+                            {{-- <button type="submit" class="btn btn-primary">Upload</button> --}}
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -89,6 +96,27 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+    <script>
+        Dropzone.autoDiscover = false;
+
+        const myDropzone = new Dropzone("#my-dropzone", {
+            url: "/images",
+            paramName: "file",
+            maxFilesize: 2, // MB
+            acceptedFiles: "image/*",
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            success: function (file, response) {
+                console.log('File uploaded successfully:', response);
+            },
+            error: function (file, response) {
+                console.error('Error uploading file:', response);
+            }
+        });
+    </script>
 
     <script>
         $(document).ready(function() {
